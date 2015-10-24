@@ -1,6 +1,8 @@
 #!/bin/bash
 
 ## Takes a commandline argument, or if no argument, asks for the string
+# DISCLAIMER: Needs a working ~/.my.cnf. Test if you can log in to your mysql install using just "mysql" on the command line...
+
 if [ ! $1 ]
         then
                 echo "All mysql DBs - Enter string to search for: "
@@ -8,13 +10,10 @@ if [ ! $1 ]
         else
                 STRING=$1
 fi
-##Plesk specific password finding
-MYSQLPASS=`cat /etc/psa/.psa.shadow`
-DATABASES=`mysql -uadmin -p"$MYSQLPASS" -e "SHOW DATABASES;" |grep -Ev "(Database|information_schema)"`
 
 ## Step through all DBs, grepping for the relevant string
 
 for i in $DATABASES
         do echo "*** Database: $i ***:"     
-        mysqldump -uadmin -p"$MYSQLPASS" $i --extended=FALSE |grep $STRING
+        mysqldump $i --extended=FALSE |grep $STRING
 done
