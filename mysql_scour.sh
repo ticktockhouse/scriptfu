@@ -11,9 +11,10 @@ if [ ! $1 ]
                 STRING=$1
 fi
 
+databases=$(mysql -e "SHOW DATABASES;" | grep -Ev "(Database|information_schema)")
 ## Step through all DBs, grepping for the relevant string
 
-for i in $DATABASES
+for i in $databases
         do echo "*** Database: $i ***:"     
         mysqldump $i --extended=FALSE |grep $STRING
 done
